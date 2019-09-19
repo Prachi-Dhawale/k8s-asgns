@@ -1,0 +1,58 @@
+deployment.yaml :
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+      run: my-nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+
+
+logs :
+
+root@ubuntu:~/k8stest# vim deployment.yaml
+
+root@ubuntu:~/k8stest# kubectl apply -f deployment.yaml
+deployment.apps/my-nginx created
+
+  
+root@ubuntu:~/k8stest# kubectl get pods -l run=my-nginx -o wide
+NAME                        READY   STATUS    RESTARTS   AGE     IP            NODE           NOMINATED NODE   READINESS GATES
+my-nginx-756fb87568-5bdcx   1/1     Running   0          2m15s   10.244.1.22   ubuntuworker   <none>           <none>
+my-nginx-756fb87568-pznzm   1/1     Running   0          2m16s   10.244.1.23   ubuntuworker   <none>           <none>
+
+root@ubuntu:~/k8stest# kubectl expose deployment/my-nginx
+service/my-nginx exposed
+
+root@ubuntu:~/k8stest# kubectl get svc my-nginx
+NAME       TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+my-nginx   ClusterIP   10.96.80.250   <none>        80/TCP    27s
+
+
+root@ubuntu:~/k8stest# kubectl describe svc my-nginx
+Name:              my-nginx
+Namespace:         default
+Labels:            <none>
+Annotations:       <none>
+Selector:          run=my-nginx
+Type:              ClusterIP
+IP:                10.96.80.250
+Port:              <unset>  80/TCP
+TargetPort:        80/TCP
+Endpoints:         <none>
+Session Affinity:  None
+Events:            <none>

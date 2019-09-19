@@ -1,0 +1,7 @@
+Why Kubernetes relies on proxying to forward inbound traffic to backend ?   : https://supergiant.io/blog/understanding-kubernetes-kube-proxy/
+
+There are a few reasons for using proxying for Services:
+
+There is a long history of DNS implementations not respecting record TTLs, and caching the results of name lookups after they should have expired.
+Some apps do DNS lookups only once and cache the results indefinitely.
+Even if apps and libraries did proper re-resolution, the low or zero TTLs on the DNS records could impose a high load on DNS that then becomes difficult to manage

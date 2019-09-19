@@ -1,0 +1,49 @@
+deployment.yaml :
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+		
+		
+logs:
+
+
+root@ubuntu:~/k8stest# vim deployment.yaml
+
+root@ubuntu:~/k8stest# kubectl create -f deployment.yaml
+deployment.apps/nginx-deployment created
+
+root@ubuntu:~/k8stest# kubectl get deployments
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+nginx-deployment   0/3     3            0           5m28s
+
+root@ubuntu:~/k8stest# kubectl get rs
+NAME                          DESIRED   CURRENT   READY   AGE
+frontend                      3         3         0       97m
+nginx-deployment-5754944d6c   3         3         0       5m57s
+
+root@ubuntu:~# kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+frontend-2xmsc                      1/1     Running   0          24h
+frontend-s49n6                      1/1     Running   0          24h
+frontend-sc4rj                      1/1     Running   0          24h
+nginx-deployment-5754944d6c-qwsfd   1/1     Running   0          23h
+nginx-deployment-5754944d6c-rpg54   1/1     Running   0          23h

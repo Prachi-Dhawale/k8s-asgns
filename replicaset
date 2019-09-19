@@ -1,0 +1,66 @@
+Logs for Replicaset :
+
+repliaset.yaml :
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  # modify replicas according to your case
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: php-redis
+        image: gcr.io/google_samples/gb-frontend:v3
+		
+		
+		
+		
+logs :
+
+root@ubuntu:~/k8stest# kubectl create -f replicaset.yaml
+replicaset.apps/frontend created
+
+root@ubuntu:~/k8stest# kubectl get rs
+NAME       DESIRED   CURRENT   READY   AGE
+frontend   3         0         0       37s
+
+root@ubuntu:~/k8stest# kubectl describe rs/frontend
+Name:         frontend
+Namespace:    default
+Selector:     tier=frontend
+Labels:       app=guestbook
+              tier=frontend
+Annotations:  <none>
+Replicas:     0 current / 3 desired
+Pods Status:  0 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:  tier=frontend
+  Containers:
+   php-redis:
+    Image:        gcr.io/google_samples/gb-frontend:v3
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Events:           <none>
+
+
+
+root@ubuntu:~# kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+frontend-2xmsc                      1/1     Running   0          24h
+frontend-s49n6                      1/1     Running   0          24h
+frontend-sc4rj                      1/1     Running   0          24h
