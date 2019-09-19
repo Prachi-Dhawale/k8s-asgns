@@ -1,0 +1,13 @@
+version: '2'
+services:
+    parent:
+        build: server/
+        command: python ./server.py
+        ports:
+            - 1234:1234
+    child:
+        build: client/
+        command: python ./client.py
+        network_mode: host
+        depends_on:
+            - parent
