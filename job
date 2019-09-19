@@ -1,0 +1,57 @@
+job :
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: countdown
+spec:
+  template:
+    metadata:
+      name: countdown
+    spec:
+      containers:
+      - name: counter
+        image: centos:7
+        command:
+         - "bin/bash"
+         - "-c"
+         - "for i in 9 8 7 6 5 4 3 2 1 ; do echo $i ; done"
+      restartPolicy: Never
+	  
+	  
+	  
+logs :
+
+root@ubuntu:~/k8stest# kubectl create -f job.yaml
+job.batch/countdown created
+
+root@ubuntu:~/k8stest# kubectl describe jobs/countdown
+Name:           countdown
+Namespace:      default
+Selector:       controller-uid=596f0c6e-2d33-42e9-a366-b751171e4887
+Labels:         controller-uid=596f0c6e-2d33-42e9-a366-b751171e4887
+                job-name=countdown
+Annotations:    <none>
+Parallelism:    1
+Completions:    1
+Start Time:     Thu, 19 Sep 2019 16:01:48 +0530
+Pods Statuses:  1 Running / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:  controller-uid=596f0c6e-2d33-42e9-a366-b751171e4887
+           job-name=countdown
+  Containers:
+   counter:
+    Image:      centos:7
+    Port:       <none>
+    Host Port:  <none>
+    Command:
+      bin/bash
+      -c
+      for i in 9 8 7 6 5 4 3 2 1 ; do echo $i ; done
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Events:
+  Type    Reason            Age   From            Message
+  ----    ------            ----  ----            -------
+  Normal  SuccessfulCreate  91s   job-controller  Created pod: countdown-k8462
